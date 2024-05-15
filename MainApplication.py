@@ -8,14 +8,6 @@ BACKGROUND_COLOR = "#14294a"
 MODULE_COLOR = "#0f2240"
 
 
-def getWindowWidth(self):
-    return self.winfo_width()
-
-
-def getWindowHeight(self):
-    return self.winfo_height()
-
-
 class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -23,9 +15,7 @@ class MainApplication(tk.Tk):
         self.wm_title("Runescape Metrics")
         self.resizable(True, True)
         self.geometry("1280x720")
-
-        self.bgFrame = BGFrame(self)
-        self.bgFrame.grid(row=0, column=0, sticky="nsew")
+        self.configure(bg=BACKGROUND_COLOR)
 
         self.response1 = playerAPIrequest.RequestAPI("possyeggs")
         self.player1 = playerData.PlayerData(self.response1.getPlayerData())
@@ -33,30 +23,31 @@ class MainApplication(tk.Tk):
         self.response2 = playerAPIrequest.RequestAPI("kosplink")
         self.player2 = playerData.PlayerData(self.response2.getPlayerData())
 
-        self.playerWidget1 = PlayerWidget(self.bgFrame, self.player1.getFormattedData())
-        self.playerWidget1.grid(row=1, column=0, columnspan=2, pady=20, padx=20, sticky="SW")
+        self.playerWidget1 = PlayerWidget(self, self.player1.getFormattedData())
+        self.playerWidget1.grid(row=2, column=0, columnspan=3, pady=20, padx=20, sticky="nsew")
 
-        self.playerWidget2 = PlayerWidget(self.bgFrame, self.player2.getFormattedData())
-        self.playerWidget2.grid(row=1, column=3, columnspan=2, pady=20, padx=20, rowspan=2, sticky="SE")
+        self.playerWidget2 = PlayerWidget(self, self.player2.getFormattedData())
+        self.playerWidget2.grid(row=2, column=3, columnspan=3, pady=20, padx=20, sticky="nsew")
 
-        self.player1Search = NameTextEntry(self.bgFrame)
-        self.player1Search.grid(row=0, column=0, columnspan=1, pady=10, padx=20, sticky="SW")
+        self.player1Search = NameTextEntry(self, self.playerWidget1)
+        self.player1Search.grid(row=1, column=1, sticky="ew")
 
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=1)
-        self.bgFrame.rowconfigure(0, weight=1)
-        self.bgFrame.columnconfigure(0, weight=1)
+        self.player2Search = NameTextEntry(self, self.playerWidget2)
+        self.player2Search.grid(row=1, column=4, sticky="ew")
 
+        self.__configure_grid()
         self.update_idletasks()
 
     def mainloop(self, n=0):
         super().mainloop()
 
-    def handle_player_search(self, player_name):
-        # Update player data and refresh the widget
-        response = playerAPIrequest.RequestAPI(player_name)
-        player_data = playerData.PlayerData(response.getPlayerData())
-        self.playerWidget1.update_data(player_data.getFormattedData())
+    def __configure_grid(self):
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=0)
+        self.rowconfigure(2, weight=2)
+
+        for i in range(6):
+            self.columnconfigure(i, weight=1)
 
 
 class BGFrame(tk.Frame):
@@ -79,15 +70,20 @@ class PlayerWidget(tk.Frame):
         self.infoFrame = PlayerInfoFrame.PlayerInfo(self, self.playerData)
         self.infoFrame.pack(side="top")
 
-    def update_data(self, new_player_data):
+    def __update_data(self, new_player_data):
         # Destroy the old info frame and create a new one with updated data
         self.infoFrame.destroy()
         self.infoFrame = PlayerInfoFrame.PlayerInfo(self, new_player_data)
         self.infoFrame.pack(side="top")
 
+    def handle_player_search(self, player_name):
+        response = playerAPIrequest.RequestAPI(player_name)
+        player_data = playerData.PlayerData(response.getPlayerData())
+        self.__update_data(player_data.getFormattedData())
+
 
 class NameTextEntry(tk.Entry):
-    def __init__(self, parent):
+    def __init__(self, parent, playerWidget):
         super().__init__(
             parent,
         )
@@ -96,6 +92,7 @@ class NameTextEntry(tk.Entry):
         self.characterLimit = 12
         self.update_idletasks()
         self.pack_propagate(True)
+        self.playerWidget = playerWidget
 
         self.insert(0, "Enter Name")
 
@@ -111,5 +108,4 @@ class NameTextEntry(tk.Entry):
 
     def on_enter_pressed(self, event):
         playerName = self.get()
-        mainapp = self.parent.parent
-        mainapp.handle_player_search(playerName)
+        self.playerWidget.handle_player_search(playerName)
