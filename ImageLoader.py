@@ -1,3 +1,5 @@
+import os
+
 import requests
 from requests import RequestException
 
@@ -13,6 +15,10 @@ class ImageLoader:
         self.__downloadSkillImages()
 
     def __downloadSkillImages(self):
+        if not os.path.exists(self.localDir):
+            os.makedirs(self.localDir)
+            print("Created new Local Directory: " + self.localDir)
+
         for skill in self.skillNames:
             imgData = requests.get(self.wikiImageURL + skill + ".png").content
 
