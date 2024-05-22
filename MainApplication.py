@@ -3,12 +3,15 @@ import tkinter as tk
 import PlayerInfoFrame
 import playerAPIrequest
 import playerData
+import ImageLoader
 
 BACKGROUND_COLOR = "#14294a"
 MODULE_COLOR = "#0f2240"
 
 
 class MainApplication(tk.Tk):
+    skillDirectories = ImageLoader.ImageLoader().getImageDirectories()
+
     def __init__(self):
         super().__init__()
 

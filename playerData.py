@@ -44,6 +44,8 @@ class PlayerData:
             }
 
             self.__formatSkills()
+            self.name = apiData["name"]
+            print(f"...Loaded {self.name}'s Data")
 
     def __formatSkills(self):
         skillsList = []

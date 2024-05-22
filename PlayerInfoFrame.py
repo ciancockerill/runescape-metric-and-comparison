@@ -1,13 +1,19 @@
 import tkinter as tk
+from PIL import ImageTk, Image
 
 import MainApplication
 
 __baseFont = "Verdana"
 LARGE_FONT_BOLD = (__baseFont, 12, "bold")
 LARGE_FONT = (__baseFont, 12)
+SKILL_FONT = (__baseFont, 10, "bold")
 SMALL_FONT = (__baseFont, 8)
 
+IMAGE_SIZE = 25
+
 ERROR_MESSAGE = "Profile Doesn't Exist or Profile is Private"
+
+MAX_PER_ROW = 4
 
 
 class PlayerInfo(tk.Frame):
@@ -58,11 +64,40 @@ class PlayerInfo(tk.Frame):
             skill_value = str(skills[1])
 
             # Create and place skill label
-            skillLabel = tk.Label(self, text=skill_name + " : " + skill_value, font=SMALL_FONT)
+            skillLabel = SkillFrame(self, skill_name, skill_value)
             skillLabel.grid(row=row_index, column=column_index, pady=5, padx=10)
 
             # Increment row and column indices
             column_index += 1
-            if column_index == 4:
+            if column_index >= MAX_PER_ROW:
                 column_index = 0
                 row_index += 1
+
+
+class SkillFrame(tk.Frame):
+    def __init__(self, parent, skillName, skillValue):
+        super().__init__(parent)
+        self.panel = None
+        self.image = None
+        self.parent = parent
+
+        self.skillName = skillName
+        self.skillDirectory = MainApplication.MainApplication.skillDirectories[skillName]
+        self.skillValue = skillValue
+
+        self.update_idletasks()
+        self.pack_propagate(True)
+
+        self.buildPanel()
+
+    def getImage(self):
+        img = Image.open(self.skillDirectory)
+        img = img.resize((25, 25))
+        self.image = ImageTk.PhotoImage(img)
+        return self.image
+
+    def buildPanel(self):
+        self.image = self.getImage()
+        # Create a Label with both text and image
+        self.panel = tk.Label(self, text=self.skillValue, image=self.image, compound="right", font=SKILL_FONT, padx=7)
+        self.panel.grid()
