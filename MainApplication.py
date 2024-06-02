@@ -97,7 +97,7 @@ class NameTextEntry(tk.Entry):
         self.pack_propagate(True)
         self.playerWidget = playerWidget
 
-        self.insert(0, "Enter Name")
+        self.insert(0, "")
 
         self.bind("<Return>", self.on_enter_pressed)
         self.bind("<Key>", self.on_key_release)

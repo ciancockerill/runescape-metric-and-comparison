@@ -19,6 +19,9 @@ MAX_PER_ROW = 4
 class PlayerInfo(tk.Frame):
     def __init__(self, parent, playerData):
         super().__init__(parent, bg=MainApplication.MODULE_COLOR)
+        self.bgColor = MainApplication.BACKGROUND_COLOR
+        self.textColor = "white"
+
         self.nameLabel = None
         self.totalxpLabel = None
         self.totalSkillLabel = None
@@ -41,18 +44,18 @@ class PlayerInfo(tk.Frame):
         self.errorLabel.grid(row=0, column=1, columnspan=2, pady=10)
 
     def showPlayerInfo(self):
-        self.nameLabel = tk.Label(self, text=self.playerData["name"], font=LARGE_FONT_BOLD)
+        self.nameLabel = tk.Label(self, text=self.playerData["name"], font=LARGE_FONT_BOLD, bg=self.bgColor, fg=self.textColor)
         self.nameLabel.grid(row=0, column=1, columnspan=2, pady=10)
 
-        self.totalxpLabel = tk.Label(self, text="Total XP: " + str(self.playerData["totalxp"]), font=LARGE_FONT)
+        self.totalxpLabel = tk.Label(self, text="Total XP: " + str(self.playerData["totalxp"]), font=LARGE_FONT, bg=self.bgColor, fg=self.textColor)
         self.totalxpLabel.grid(row=1, column=1, columnspan=2, pady=10)
 
         self.totalSkillLabel = tk.Label(self, text="Total Level: " + str(self.playerData["totalskill"]),
-                                        font=LARGE_FONT)
+                                        font=LARGE_FONT, bg=self.bgColor, fg=self.textColor)
         self.totalSkillLabel.grid(row=2, column=1, columnspan=2, pady=10)
 
         self.totalQuestsLabel = tk.Label(self, text="Quests Completed: " + str(self.playerData["completedquests"]),
-                                         font=LARGE_FONT)
+                                         font=LARGE_FONT, bg=self.bgColor, fg=self.textColor)
         self.totalQuestsLabel.grid(row=3, column=1, columnspan=2, pady=10)
 
         # Track row and column indices for skill labels
@@ -74,6 +77,8 @@ class PlayerInfo(tk.Frame):
                 row_index += 1
 
 
+
+
 class SkillFrame(tk.Frame):
     def __init__(self, parent, skillName, skillValue):
         super().__init__(parent)
@@ -84,8 +89,6 @@ class SkillFrame(tk.Frame):
         self.skillName = skillName
         self.skillDirectory = MainApplication.MainApplication.skillDirectories[skillName]
         self.skillValue = skillValue
-
-        self.update_idletasks()
         self.pack_propagate(True)
 
         self.buildPanel()
@@ -100,4 +103,5 @@ class SkillFrame(tk.Frame):
         self.image = self.getImage()
         # Create a Label with both text and image
         self.panel = tk.Label(self, text=self.skillValue, image=self.image, compound="right", font=SKILL_FONT, padx=7)
+        self.panel.config(bg=MainApplication.BACKGROUND_COLOR, fg="white")
         self.panel.grid()
