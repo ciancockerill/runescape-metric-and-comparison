@@ -4,7 +4,7 @@ from PIL import ImageTk, Image
 import MainApplication
 
 __baseFont = "Verdana"
-LARGE_FONT_BOLD = (__baseFont, 12, "bold")
+LARGE_FONT_BOLD = (__baseFont, 20, "bold")
 LARGE_FONT = (__baseFont, 12)
 SKILL_FONT = (__baseFont, 10, "bold")
 SMALL_FONT = (__baseFont, 8)
@@ -40,7 +40,7 @@ class PlayerInfo(tk.Frame):
             self.showError()
 
     def showError(self):
-        self.errorLabel = tk.Label(self, text=ERROR_MESSAGE, font=LARGE_FONT_BOLD)
+        self.errorLabel = tk.Label(self, text=ERROR_MESSAGE, font=LARGE_FONT)
         self.errorLabel.grid(row=0, column=1, columnspan=2, pady=10)
 
     def showPlayerInfo(self):
@@ -87,7 +87,7 @@ class SkillFrame(tk.Frame):
         self.parent = parent
 
         self.skillName = skillName
-        self.skillDirectory = MainApplication.MainApplication.skillDirectories[skillName]
+        self.skillDirectory = MainApplication.MainApplication.skillImageDirectories[skillName]
         self.skillValue = skillValue
         self.pack_propagate(True)
 
