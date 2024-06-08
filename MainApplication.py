@@ -15,13 +15,24 @@ DEFAULT_SEARCH1 = "possyeggs"
 DEFAULT_SEARCH2 = "kosplink"
 
 
+def requestPlayerTable(playerName, data_queue):
+    responseData = playerAPIrequest.RequestAPI(playerName).getPlayerData()
+    if responseData:
+        playerTable = playerData.PlayerData(responseData).getFormattedData()
+    else:
+        playerTable = None
+
+    # Put the result in the queue
+    data_queue.put(playerTable)
+
+
 class MainApplication(tk.Tk):
     skillImageDirectories = ImageLoader.ImageLoader().getImageDirectories()
 
     def __init__(self):
         super().__init__()
-        # self.withdraw()  # Hide the window
-        # self.after(0, self.deiconify)  # After the window has fully loaded, show again
+        self.withdraw()  # Hide the window
+        self.after(0, self.deiconify)  # After the window has fully loaded, show again
 
         self.__configure_grid()
 
@@ -29,6 +40,12 @@ class MainApplication(tk.Tk):
         self.resizable(True, True)
         self.geometry("1280x720")
         self.configure(bg=BACKGROUND_COLOR)
+
+        self.player1Label = tk.Label(text="Enter Player Name", font=PlayerInfoFrame.LARGE_FONT, pady=10, bg=BACKGROUND_COLOR, fg="white")
+        self.player1Label.grid(row=0, column=1,sticky="ew")
+
+        self.player2Label = tk.Label(text="Enter Player Name", font=PlayerInfoFrame.LARGE_FONT, pady=10,bg=BACKGROUND_COLOR, fg="white")
+        self.player2Label.grid(row=0, column=4, sticky="ew")
 
         self.playerWidget1 = self.addPlayerInfoBox(DEFAULT_SEARCH1)
         self.playerWidget1.grid(row=2, column=0, columnspan=3, pady=20, padx=20, sticky="nsew")
@@ -48,7 +65,7 @@ class MainApplication(tk.Tk):
         super().mainloop()
 
     def __configure_grid(self):
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)
         self.rowconfigure(1, weight=0)
         self.rowconfigure(2, weight=2)
 
@@ -63,22 +80,12 @@ class MainApplication(tk.Tk):
         data_queue = queue.Queue()
 
         # Start the thread to fetch the player data
-        requestThread = threading.Thread(target=self.requestPlayerTable, args=(playerName, data_queue))
+        requestThread = threading.Thread(target=requestPlayerTable, args=(playerName, data_queue))
         requestThread.start()
 
         # Schedule the queue check method
         self.after(100, self.process_queue, data_queue, playerWidget)
         return playerWidget
-
-    def requestPlayerTable(self, playerName, data_queue):
-        responseData = playerAPIrequest.RequestAPI(playerName).getPlayerData()
-        if responseData:
-            playerTable = playerData.PlayerData(responseData).getFormattedData()
-        else:
-            playerTable = None
-
-        # Put the result in the queue
-        data_queue.put(playerTable)
 
     def process_queue(self, data_queue, playerWidget):
         try:
@@ -131,7 +138,7 @@ class PlayerWidget(tk.Frame):
         self.parent.after(100, self.parent.process_queue, data_queue, self)
 
     def showLoading(self):
-        self.loadingLabel = tk.Label(self, text="Loading...")
+        self.loadingLabel = tk.Label(self, text="Loading...", font=PlayerInfoFrame.LARGE_FONT)
         self.loadingLabel.pack()
 
 

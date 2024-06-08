@@ -13,8 +13,7 @@ IMAGE_SIZE = 25
 
 ERROR_MESSAGE = "Profile Doesn't Exist or Profile is Private"
 
-MAX_PER_ROW = 4
-
+MAX_SKILLS_PER_ROW = 4
 
 class PlayerInfo(tk.Frame):
     def __init__(self, parent, playerData):
@@ -68,16 +67,13 @@ class PlayerInfo(tk.Frame):
 
             # Create and place skill label
             skillLabel = SkillFrame(self, skill_name, skill_value)
-            skillLabel.grid(row=row_index, column=column_index, pady=5, padx=10)
+            skillLabel.grid(row=row_index, column=column_index, pady=5, padx=5)
 
             # Increment row and column indices
             column_index += 1
-            if column_index >= MAX_PER_ROW:
+            if column_index >= MAX_SKILLS_PER_ROW:
                 column_index = 0
                 row_index += 1
-
-
-
 
 class SkillFrame(tk.Frame):
     def __init__(self, parent, skillName, skillValue):
