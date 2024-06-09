@@ -23,12 +23,13 @@ class PlayerInfo(tk.Frame):
         self.textColor = "white"
 
         self.nameLabel = None
-        self.totalxpLabel = None
+        self.total_xpLabel = None
         self.totalSkillLabel = None
         self.totalQuestsLabel = None
         self.errorLabel = None
 
         self.playerData = playerData
+        self.skillWidgets = {}
 
         self.update_idletasks()
         self.config(height=parent.winfo_height(), width=parent.winfo_width())
@@ -48,9 +49,9 @@ class PlayerInfo(tk.Frame):
                                   fg=self.textColor)
         self.nameLabel.grid(row=0, column=1, columnspan=2, pady=10)
 
-        self.totalxpLabel = tk.Label(self, text="Total XP: " + str(self.playerData["totalxp"]), font=LARGE_FONT,
-                                     bg=self.bgColor, fg=self.textColor)
-        self.totalxpLabel.grid(row=1, column=1, columnspan=2, pady=10)
+        self.total_xpLabel = tk.Label(self, text="Total XP: " + str(self.playerData["totalxp"]), font=LARGE_FONT,
+                                      bg=self.bgColor, fg=self.textColor)
+        self.total_xpLabel.grid(row=1, column=1, columnspan=2, pady=10)
 
         self.totalSkillLabel = tk.Label(self, text="Total Level: " + str(self.playerData["totalskill"]),
                                         font=LARGE_FONT, bg=self.bgColor, fg=self.textColor)
@@ -69,8 +70,9 @@ class PlayerInfo(tk.Frame):
             skill_value = str(skills[1])
 
             # Create and place skill label
-            skillLabel = SkillFrame(self, skill_name, skill_value)
-            skillLabel.grid(row=row_index, column=column_index, pady=5, padx=5)
+            skillWidget = SkillFrame(self, skill_name, skill_value)
+            self.skillWidgets[skill_name] = skillWidget
+            skillWidget.grid(row=row_index, column=column_index, pady=5, padx=5)
 
             # Increment row and column indices
             column_index += 1
@@ -78,11 +80,14 @@ class PlayerInfo(tk.Frame):
                 column_index = 0
                 row_index += 1
 
+    def getSkillWidgets(self):
+        return self.skillWidgets
+
 
 class SkillFrame(tk.Frame):
     def __init__(self, parent, skillName, skillValue):
         super().__init__(parent)
-        self.panel = None
+        self.label = None
         self.image = None
         self.parent = parent
 
@@ -97,11 +102,21 @@ class SkillFrame(tk.Frame):
         img = Image.open(self.skillDirectory)
         img = img.resize((25, 25))
         self.image = ImageTk.PhotoImage(img)
+
         return self.image
 
     def buildPanel(self):
         self.image = self.getImage()
         # Create a Label with both text and image
-        self.panel = tk.Label(self, text=self.skillValue, image=self.image, compound="right", font=SKILL_FONT, padx=7)
-        self.panel.config(bg=main_application.BACKGROUND_COLOR, fg="white")
-        self.panel.grid()
+        self.label = tk.Label(self, text=self.skillValue, image=self.image, compound="right", font=SKILL_FONT, padx=7)
+        self.label.config(bg=main_application.BACKGROUND_COLOR, fg="white")
+        self.label.grid()
+
+    def setBackground(self, color):
+        self.label.config(bg=color)
+
+    def getSkillLevel(self):
+        return self.skillValue
+
+    def getSkillName(self):
+        return self.skillName

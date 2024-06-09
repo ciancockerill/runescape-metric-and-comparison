@@ -2,6 +2,7 @@ import tkinter as tk
 import threading
 import queue
 
+import comparing
 import player_data_widget
 import player_api_request
 import player_data
@@ -45,10 +46,22 @@ class MainApplication(tk.Tk):
         self.__initPlayerSearchBoxes()
         self.__initPlayerLabels()
 
+        self.after(3000, self.comparePlayers)
+
         self.update_idletasks()
 
     def mainloop(self, n=0):
         super().mainloop()
+
+    def comparePlayers(self):
+        p1_skillWidget = self.playerWidget1.infoFrame
+        p2_skillWidget = self.playerWidget2.infoFrame
+
+        if (p1_skillWidget is None) or (p2_skillWidget is None):
+            return
+
+        compare = comparing.CompareStats(p1_skillWidget, p2_skillWidget)
+        compare.compareSkills()
 
     def __initPlayerWidgets(self):
         self.playerWidget1 = self.addPlayerInfoBox(DEFAULT_SEARCH1)
@@ -65,10 +78,12 @@ class MainApplication(tk.Tk):
         self.player2Search.grid(row=1, column=4, sticky="ew")
 
     def __initPlayerLabels(self):
-        self.player1Label = tk.Label(text="Enter Player Name", font=player_data_widget.LARGE_FONT, pady=10, bg=BACKGROUND_COLOR, fg="white")
-        self.player1Label.grid(row=0, column=1,sticky="ew")
+        self.player1Label = tk.Label(text="Enter Player Name", font=player_data_widget.LARGE_FONT, pady=10,
+                                     bg=BACKGROUND_COLOR, fg="white")
+        self.player1Label.grid(row=0, column=1, sticky="ew")
 
-        self.player2Label = tk.Label(text="Enter Player Name", font=player_data_widget.LARGE_FONT, pady=10,bg=BACKGROUND_COLOR, fg="white")
+        self.player2Label = tk.Label(text="Enter Player Name", font=player_data_widget.LARGE_FONT, pady=10,
+                                     bg=BACKGROUND_COLOR, fg="white")
         self.player2Label.grid(row=0, column=4, sticky="ew")
 
     def __configure_grid(self):
@@ -104,14 +119,8 @@ class MainApplication(tk.Tk):
             # API data received, update the playerWidget
             playerWidget.update_data(playerTable)
 
-
-class BGFrame(tk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent, bg=BACKGROUND_COLOR)
-
-        self.parent = parent
-        self.update_idletasks()
-        self.config(height=parent.winfo_height(), width=parent.winfo_width())
+            if playerTable is not None:
+                self.comparePlayers()
 
 
 class PlayerWidget(tk.Frame):
