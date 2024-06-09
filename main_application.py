@@ -2,10 +2,10 @@ import tkinter as tk
 import threading
 import queue
 
-import PlayerInfoFrame
-import playerAPIrequest
-import playerData
-import ImageLoader
+import player_data_widget
+import player_api_request
+import player_data
+import image_loader
 
 BACKGROUND_COLOR = "#14294a"
 MODULE_COLOR = "#0f2240"
@@ -16,9 +16,9 @@ DEFAULT_SEARCH2 = "kosplink"
 
 
 def requestPlayerTable(playerName, data_queue):
-    responseData = playerAPIrequest.RequestAPI(playerName).getPlayerData()
+    responseData = player_api_request.RequestAPI(playerName).getPlayerData()
     if responseData:
-        playerTable = playerData.PlayerData(responseData).getFormattedData()
+        playerTable = player_data.PlayerData(responseData).getFormattedData()
     else:
         playerTable = None
 
@@ -27,7 +27,7 @@ def requestPlayerTable(playerName, data_queue):
 
 
 class MainApplication(tk.Tk):
-    skillImageDirectories = ImageLoader.ImageLoader().getImageDirectories()
+    skillImageDirectories = image_loader.ImageLoader().getImageDirectories()
 
     def __init__(self):
         super().__init__()
@@ -65,10 +65,10 @@ class MainApplication(tk.Tk):
         self.player2Search.grid(row=1, column=4, sticky="ew")
 
     def __initPlayerLabels(self):
-        self.player1Label = tk.Label(text="Enter Player Name", font=PlayerInfoFrame.LARGE_FONT, pady=10, bg=BACKGROUND_COLOR, fg="white")
+        self.player1Label = tk.Label(text="Enter Player Name", font=player_data_widget.LARGE_FONT, pady=10, bg=BACKGROUND_COLOR, fg="white")
         self.player1Label.grid(row=0, column=1,sticky="ew")
 
-        self.player2Label = tk.Label(text="Enter Player Name", font=PlayerInfoFrame.LARGE_FONT, pady=10,bg=BACKGROUND_COLOR, fg="white")
+        self.player2Label = tk.Label(text="Enter Player Name", font=player_data_widget.LARGE_FONT, pady=10,bg=BACKGROUND_COLOR, fg="white")
         self.player2Label.grid(row=0, column=4, sticky="ew")
 
     def __configure_grid(self):
@@ -134,7 +134,7 @@ class PlayerWidget(tk.Frame):
         if self.infoFrame is not None:
             self.infoFrame.destroy()
 
-        self.infoFrame = PlayerInfoFrame.PlayerInfo(self, new_player_data)
+        self.infoFrame = player_data_widget.PlayerInfo(self, new_player_data)
         self.infoFrame.pack(side="top")
 
     def handle_player_search(self, player_name):
@@ -145,7 +145,7 @@ class PlayerWidget(tk.Frame):
         self.parent.after(100, self.parent.process_queue, data_queue, self)
 
     def showLoading(self):
-        self.loadingLabel = tk.Label(self, text="Loading...", font=PlayerInfoFrame.LARGE_FONT)
+        self.loadingLabel = tk.Label(self, text="Loading...", font=player_data_widget.LARGE_FONT)
         self.loadingLabel.pack()
 
 

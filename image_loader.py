@@ -1,10 +1,9 @@
 import os
 
 import requests
-import aiohttp
 from requests import RequestException
 
-import playerData
+import player_data
 
 
 class ImageLoader:
@@ -12,7 +11,7 @@ class ImageLoader:
         self.wikiImageURL = "https://runescape.wiki/images/"
         self.localDir = "images/skills/"
         self.directoryTable = {}
-        self.skillNames = playerData.PlayerData.skillDictionary.values()
+        self.skillNames = player_data.PlayerData.skillDictionary.values()
         self.__downloadSkillImages()
 
     def __doesImageExist(self, skill, imgData):

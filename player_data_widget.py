@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 
-import MainApplication
+import main_application
 
 __baseFont = "Verdana"
 LARGE_FONT_BOLD = (__baseFont, 20, "bold")
@@ -18,8 +18,8 @@ MAX_SKILLS_PER_ROW = 4
 
 class PlayerInfo(tk.Frame):
     def __init__(self, parent, playerData):
-        super().__init__(parent, bg=MainApplication.MODULE_COLOR)
-        self.bgColor = MainApplication.BACKGROUND_COLOR
+        super().__init__(parent, bg=main_application.MODULE_COLOR)
+        self.bgColor = main_application.BACKGROUND_COLOR
         self.textColor = "white"
 
         self.nameLabel = None
@@ -87,7 +87,7 @@ class SkillFrame(tk.Frame):
         self.parent = parent
 
         self.skillName = skillName
-        self.skillDirectory = MainApplication.MainApplication.skillImageDirectories[skillName]
+        self.skillDirectory = main_application.MainApplication.skillImageDirectories[skillName]
         self.skillValue = skillValue
         self.pack_propagate(True)
 
@@ -103,5 +103,5 @@ class SkillFrame(tk.Frame):
         self.image = self.getImage()
         # Create a Label with both text and image
         self.panel = tk.Label(self, text=self.skillValue, image=self.image, compound="right", font=SKILL_FONT, padx=7)
-        self.panel.config(bg=MainApplication.BACKGROUND_COLOR, fg="white")
+        self.panel.config(bg=main_application.BACKGROUND_COLOR, fg="white")
         self.panel.grid()

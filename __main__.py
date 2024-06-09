@@ -1,4 +1,4 @@
-import MainApplication
+import main_application
 
-app = MainApplication.MainApplication()
+app = main_application.MainApplication()
 app.mainloop()
