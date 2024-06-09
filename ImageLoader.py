@@ -15,7 +15,7 @@ class ImageLoader:
         self.skillNames = playerData.PlayerData.skillDictionary.values()
         self.__downloadSkillImages()
 
-    def __DoesImageExist(self, skill, imgData):
+    def __doesImageExist(self, skill, imgData):
         localImageDir = self.localDir + skill + ".png"
 
         if not os.path.exists(localImageDir):
@@ -33,7 +33,7 @@ class ImageLoader:
         for skill in self.skillNames:
             imgData = requests.get(self.wikiImageURL + skill + ".png").content
 
-            if self.__DoesImageExist(skill, imgData):
+            if self.__doesImageExist(skill, imgData):
                 print("..." + skill + " Image Already Saved")
             else:
                 try:

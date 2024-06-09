@@ -15,6 +15,7 @@ ERROR_MESSAGE = "Profile Doesn't Exist or Profile is Private"
 
 MAX_SKILLS_PER_ROW = 4
 
+
 class PlayerInfo(tk.Frame):
     def __init__(self, parent, playerData):
         super().__init__(parent, bg=MainApplication.MODULE_COLOR)
@@ -43,10 +44,12 @@ class PlayerInfo(tk.Frame):
         self.errorLabel.grid(row=0, column=1, columnspan=2, pady=10)
 
     def showPlayerInfo(self):
-        self.nameLabel = tk.Label(self, text=self.playerData["name"], font=LARGE_FONT_BOLD, bg=self.bgColor, fg=self.textColor)
+        self.nameLabel = tk.Label(self, text=self.playerData["name"], font=LARGE_FONT_BOLD, bg=self.bgColor,
+                                  fg=self.textColor)
         self.nameLabel.grid(row=0, column=1, columnspan=2, pady=10)
 
-        self.totalxpLabel = tk.Label(self, text="Total XP: " + str(self.playerData["totalxp"]), font=LARGE_FONT, bg=self.bgColor, fg=self.textColor)
+        self.totalxpLabel = tk.Label(self, text="Total XP: " + str(self.playerData["totalxp"]), font=LARGE_FONT,
+                                     bg=self.bgColor, fg=self.textColor)
         self.totalxpLabel.grid(row=1, column=1, columnspan=2, pady=10)
 
         self.totalSkillLabel = tk.Label(self, text="Total Level: " + str(self.playerData["totalskill"]),
@@ -74,6 +77,7 @@ class PlayerInfo(tk.Frame):
             if column_index >= MAX_SKILLS_PER_ROW:
                 column_index = 0
                 row_index += 1
+
 
 class SkillFrame(tk.Frame):
     def __init__(self, parent, skillName, skillValue):
