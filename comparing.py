@@ -30,3 +30,11 @@ class CompareStats:
             else:
                 p1_skillWidget.setBackground(main_application.BACKGROUND_COLOR)
                 p2_skillWidget.setBackground(main_application.BACKGROUND_COLOR)
+
+    def clearCompareColours(self):
+        for skillName in zip(self.p1_skillWidgets, self.p2_skillWidgets):
+            p1_skillWidget = self.p1_skillWidgets[skillName]
+            p2_skillWidget = self.p2_skillWidgets[skillName]
+
+            p1_skillWidget.setBackground(main_application.BACKGROUND_COLOR)
+            p2_skillWidget.setBackground(main_application.BACKGROUND_COLOR)
